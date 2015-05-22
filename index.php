@@ -112,9 +112,9 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                             [0, 0, 0, 0]
                         ],
                         [
-                            [0, 0, 0, 0], //third form 90°
-                            [0, 1, 1, 1],
-                            [0, 0, 0, 1],
+                            [1, 1, 1, 0], //third form 90°
+                            [0, 0, 1, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ]
                     ]
@@ -141,9 +141,9 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                             [0, 0, 0, 0]
                         ],
                         [
-                            [0, 0, 0, 0], //fouth form 90°
-                            [0, 0, 1, 0],
+                            [0, 0, 1, 0], //fouth form 90°
                             [1, 1, 1, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ]
                     ]
@@ -153,27 +153,27 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                 , 3: {//O
                     blocks: [
                         [
-                            [0, 0, 0, 0], //first form line
+                            [0, 1, 1, 0], //first form line
                             [0, 1, 1, 0],
-                            [0, 1, 1, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ],
                         [
-                            [0, 0, 0, 0], //second form 90°
+                            [0, 1, 1, 0], //second form 90°
                             [0, 1, 1, 0],
-                            [0, 1, 1, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ],
                         [
-                            [0, 0, 0, 0], //third form 90°
+                            [0, 1, 1, 0], //third form 90°
                             [0, 1, 1, 0],
-                            [0, 1, 1, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ],
                         [
-                            [0, 0, 0, 0], //third form 90°
+                            [0, 1, 1, 0], //third form 90°
                             [0, 1, 1, 0],
-                            [0, 1, 1, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ]
                     ]
@@ -182,9 +182,9 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                 , 4: {//S
                     blocks: [
                         [
-                            [0, 0, 0, 0], //first form line
-                            [0, 1, 1, 0],
+                            [0, 1, 1, 0], //first form line
                             [1, 1, 0, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ],
                         [
@@ -194,15 +194,15 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                             [0, 0, 0, 0]
                         ],
                         [
-                            [0, 0, 0, 0], //third form 90°
-                            [0, 0, 1, 1],
-                            [0, 1, 1, 0],
+                            [0, 1, 1, 0], //third form 90°
+                            [1, 1, 0, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ],
                         [
-                            [0, 0, 1, 0], //third form 90°
-                            [0, 0, 1, 1],
-                            [0, 0, 0, 1],
+                            [0, 1, 0, 0], //third form 90°
+                            [0, 1, 1, 0],
+                            [0, 0, 1, 0],
                             [0, 0, 0, 0]
                         ]
                     ]
@@ -211,9 +211,9 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                 , 5: {//T
                     blocks: [
                         [
-                            [0, 0, 0, 0], //first form line
-                            [1, 1, 1, 0],
+                            [1, 1, 1, 0], //first form line
                             [0, 1, 0, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ],
                         [
@@ -240,27 +240,27 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                 , 6: {//Z
                     blocks: [
                         [
-                            [0, 0, 0, 0], //first form line
+                            [1, 1, 0, 0], //first form line
+                            [0, 1, 1, 0],
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0]
+                        ],
+                        [
+                            [0, 1, 0, 0], //second form 90°
                             [1, 1, 0, 0],
-                            [0, 1, 1, 0],
+                            [1, 0, 0, 0],
                             [0, 0, 0, 0]
                         ],
                         [
-                            [0, 0, 1, 0], //second form 90°
+                            [1, 1, 0, 0], //third form 90°
                             [0, 1, 1, 0],
-                            [0, 1, 0, 0],
+                            [0, 0, 0, 0],
                             [0, 0, 0, 0]
                         ],
                         [
-                            [0, 0, 0, 0], //third form 90°
-                            [0, 1, 1, 0],
-                            [0, 0, 1, 1],
-                            [0, 0, 0, 0]
-                        ],
-                        [
-                            [0, 0, 0, 1], //third form 90°
-                            [0, 0, 1, 1],
-                            [0, 0, 1, 0],
+                            [0, 1, 0, 0], //third form 90°
+                            [1, 1, 0, 0],
+                            [1, 0, 0, 0],
                             [0, 0, 0, 0]
                         ]
                     ]
@@ -284,7 +284,6 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
             }
 
             function moveShape(sharp) {
-                console.group([currentShape.name,'-moveShape ',y].join(''));
                 if (isValidPlace(r, x, (y + 1), sharp)) {
                     draw(r, xLast, yLast, sharp, 'none');
                     ++y;
@@ -292,8 +291,8 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                     xLast = x;
                     yLast = y;
                 }
-                
-                console.groupEnd([currentShape.name,'-moveShape ',y].join(''));
+
+//                console.groupEnd([currentShape.name,'-moveShape ',y].join(''));
             }
 
             function redrawShape(r, sharp) {
@@ -305,58 +304,67 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                     rLast = r;
                 }
             }
-            function draw(r, x, y, sharp, texture) {
+            function draw(r, xCoord, yCoord, sharp, texture) {
                 var i, j;
-//                console.group(['rotation = ', r, ' (', x, ',', y, ')'].join(''));
+//                console.group(['rotation = ', r, ' (', xCoord, ',', yCoord, ')'].join(''));
                 for (i = 0; i < DOMAINSHAPE; i++) {
                     for (j = 0; j < DOMAINSHAPE; j++) {
                         if (sharp.blocks[r][i][j]) {
-//                            console.group(['#grid', (j + x), (i + y), ' texture', texture].join(''));
+                            if (texture === 'none') {
+                                console.log(['clear (', (j + xCoord), ',', (i + yCoord), ') ',['#grid', (j + xCoord), (i + yCoord)].join('')].join(''));                                
+                            }else{
+                                console.log(['fill (', (j + xCoord), ',', (i + yCoord), ') ',['#grid', (j + xCoord), (i + yCoord)].join('')].join(''));
+                            }
+//                            console.group(['#grid', (j + xCoord), (i + yCoord), ' texture', texture].join(''));
 //                            console.log(['(j,i) = (', j, ',', i, ')'].join(''));
-//                            console.log(['((x+j),(y+i)) = (', (x + j), ',', (y + i), ')'].join(''));
-//                            console.log($(['#grid', (j + x), (i + y)].join(''))[0]);
+//                            console.log(['((xCoord+j),(yCoord+i)) = (', (xCoord + j), ',', (yCoord + i), ')'].join(''));
+//                            console.log($(['#grid', (j + xCoord), (i + yCoord)].join(''))[0]);
 //                            console.log(sharp.blocks[r][i][j]);
 //                            console.log(sharp.blocks[r][i].join(','));
 //                            console.log(sharp.blocks[r].join('\n'));
-//                            console.groupEnd(['#grid', (j + x), (i + y), ' texture', texture].join(''));
-                            $(['#grid', (j + x), (i + y)].join('')).css({'backgroundImage': texture})
+//                            console.groupEnd(['#grid', (j + xCoord), (i + yCoord), ' texture', texture].join(''));
+                            $(['#grid', (j + xCoord), (i + yCoord)].join('')).css({'backgroundImage': texture})
                                     .attr({'filled-shape': (texture === 'none' ? '0' : '1')});
                         }
                     }
                 }
-//                console.groupEnd(['rotation = ', r, ' (', x, ',', y, ')'].join(''));
+//                console.groupEnd(['rotation = ', r, ' (', xCoord, ',', yCoord, ')'].join(''));
             }
-            
+
             function isValidPlace(r, x, y, shape) {
                 var i, j;
-                console.group([currentShape.name,'-isValidPlace y :',y].join(''));
+//                console.group([currentShape.name,'-isValidPlace y :',y].join(''));
                 for (i = 0; i < DOMAINSHAPE; i++) {
                     for (j = 0; j < DOMAINSHAPE; j++) {
                         if (shape.blocks[r][i][j]) {
-                            console.log(['(', (x + j), ',', (y + i), ')', ' #grid', (j + x), (i + y), ' is filled ', $(['#grid', (j + x), (i + y)].join('')).attr('filled-shape')].join(''));
-                            console.log(['shape.blocks[',r,'][',i,'][',j,'] = ',shape.blocks[r][i][j]].join(''));
-                            console.log((y + i));
-                            console.log((m - 1));
-                            console.log((shape.blocks[r][i][j] && (y + i) > (m - 1)));
-                            console.log(!isNaN($(['#grid', (j + x), (i + y)].join('')).attr('filled-shape')));
+//                            console.log(['(', (x + j), ',', (y + i), ')', ' #grid', (j + x), (i + y), ' is filled ', $(['#grid', (j + x), (i + y)].join('')).attr('filled-shape')].join(''));
+//                            console.log(['shape.blocks[',r,'][',i,'][',j,'] = ',shape.blocks[r][i][j]].join(''));
+//                            console.log((y + i));
+//                            console.log((m - 1));
+//                            console.log((shape.blocks[r][i][j] && (y + i) > (m - 1)));
+//                            console.log(!isNaN($(['#grid', (j + x), (i + y)].join('')).attr('filled-shape')));
                         }
 
                         if ((shape.blocks[r][i][j] && (y + i) > (m - 1))) {
-                            console.log($("div[filled-shape=1]").attr('filled-shape', '3'));
+//                            console.log($("div[filled-shape=1]").attr('filled-shape', '3'));
+                            console.groupEnd([currentShape.name, '-moveShape ', y].join(''));
+                            window.clearTimeout(tetrisTimer);                            
                             getNewShape();
+                            tetrisTimer = window.setInterval(moveShape, 600, currentShape);
 //                            console.group(shape.name);
 //                            console.log(['(', (j + x), ',', (i + y), ')'].join(''));
 //                            console.groupEnd(shape.name);
-                            console.groupEnd([currentShape.name,'-isValidPlace y :',y].join(''));
+//                            console.groupEnd([currentShape.name,'-isValidPlace y :',y].join(''));
+
                             return false;
                         }
                     }
 
                 }
-                console.groupEnd([currentShape.name,'-isValidPlace y :',y].join(''));
+//                console.groupEnd([currentShape.name,'-isValidPlace y :',y].join(''));
                 return true;
             }
-            
+
             function isValidSideMove(r, x, y, shape) {
                 var i, j;
                 for (i = 0; i < DOMAINSHAPE; i++) {
@@ -372,22 +380,26 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                 }
                 return true;
             }
-            
+
             function getNewShape() {
                 x = 2;
-                y = 0;
+                y = -1;
                 xLast = x;
                 yLast = y;
-//                console.log($("div[filled-shape=1]").data());
-                r = 1 + Math.random() * DOMAINSHAPE;
-                r = parseInt(r > DOMAINSHAPE ? (DOMAINSHAPE - 1) : r, 0);
+//                r = 1 + Math.random() * DOMAINSHAPE;
+//                r = parseInt(r > DOMAINSHAPE ? (DOMAINSHAPE - 1) : r, 0);
+                r = 3;
                 rLast = r;
                 var shapePosition = 1 + Math.random() * DOMAINSHAPE;
                 shapePosition = parseInt(shapePosition > DOMAINSHAPE ? (DOMAINSHAPE - 1) : shapePosition, 0);
                 currentShape = shapes[(shapePosition)];
+                console.group([currentShape.name, '-moveShape ', y].join(''));
+                console.log(['rotation : ',r,'\ndescription form :\n',currentShape.blocks[r].join('\n')].join(''));
+                console.log(['new coor (', x, ',', y, '), old = (', xLast, ',', yLast, ')'].join(''));
+
 //                return shapes[(shapePosition)];
             }
-            
+
             function rotateShape(shape) {
                 if (isValidSideMove(((r + 1) < DOMAINSHAPE ? (r + 1) : 0), x, y, shape)) {
                     (r < (DOMAINSHAPE - 1) ? (++r) : (r = 0));
@@ -417,12 +429,12 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
             }
 
             $(document).ready(function () {
-//                currentShape = getShape();                
-                currentShape = shapes[0];
+                getNewShape();
+//                currentShape = shapes[0];
                 generateGrid(n, m);
 //                draw(r, 0, 16, shapes[0], texture[0]);
 //                isValidPlace(r, 0, 17, shapes[0]);
-                draw(r, x, y, currentShape, texture[0]);
+//                draw(r, x, y, currentShape, texture[0]);
                 tetrisTimer = window.setInterval(moveShape, 600, currentShape);
                 $(window).keydown(function (e) {
 //                    console.log(e.charCode || e.keyCode);
