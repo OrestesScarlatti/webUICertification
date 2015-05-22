@@ -290,6 +290,11 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                     draw(r, x, y, sharp, texture[0]);
                     xLast = x;
                     yLast = y;
+                } else {
+                    console.groupEnd([currentShape.name, '-moveShape ', y].join(''));
+                    window.clearTimeout(tetrisTimer);
+                    getNewShape();
+                    tetrisTimer = window.setInterval(moveShape, 600, currentShape);
                 }
 
 //                console.groupEnd([currentShape.name,'-moveShape ',y].join(''));
@@ -310,11 +315,6 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                 for (i = 0; i < DOMAINSHAPE; i++) {
                     for (j = 0; j < DOMAINSHAPE; j++) {
                         if (sharp.blocks[r][i][j]) {
-                            if (texture === 'none') {
-                                console.log(['clear (', (j + xCoord), ',', (i + yCoord), ') ',['#grid', (j + xCoord), (i + yCoord)].join('')].join(''));                                
-                            }else{
-                                console.log(['fill (', (j + xCoord), ',', (i + yCoord), ') ',['#grid', (j + xCoord), (i + yCoord)].join('')].join(''));
-                            }
 //                            console.group(['#grid', (j + xCoord), (i + yCoord), ' texture', texture].join(''));
 //                            console.log(['(j,i) = (', j, ',', i, ')'].join(''));
 //                            console.log(['((xCoord+j),(yCoord+i)) = (', (xCoord + j), ',', (yCoord + i), ')'].join(''));
@@ -336,21 +336,13 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
 //                console.group([currentShape.name,'-isValidPlace y :',y].join(''));
                 for (i = 0; i < DOMAINSHAPE; i++) {
                     for (j = 0; j < DOMAINSHAPE; j++) {
-                        if (shape.blocks[r][i][j]) {
-//                            console.log(['(', (x + j), ',', (y + i), ')', ' #grid', (j + x), (i + y), ' is filled ', $(['#grid', (j + x), (i + y)].join('')).attr('filled-shape')].join(''));
-//                            console.log(['shape.blocks[',r,'][',i,'][',j,'] = ',shape.blocks[r][i][j]].join(''));
-//                            console.log((y + i));
-//                            console.log((m - 1));
-//                            console.log((shape.blocks[r][i][j] && (y + i) > (m - 1)));
-//                            console.log(!isNaN($(['#grid', (j + x), (i + y)].join('')).attr('filled-shape')));
-                        }
+//                        if (shape.blocks[r][i][j] && ) {
+//                            $("div[filled-shape=1]").attr('filled-shape', '3');
+//                            return false;
+//                        }
 
-                        if ((shape.blocks[r][i][j] && (y + i) > (m - 1))) {
-//                            console.log($("div[filled-shape=1]").attr('filled-shape', '3'));
-                            console.groupEnd([currentShape.name, '-moveShape ', y].join(''));
-                            window.clearTimeout(tetrisTimer);                            
-                            getNewShape();
-                            tetrisTimer = window.setInterval(moveShape, 600, currentShape);
+                        if (shape.blocks[r][i][j] && ((y + i) > (m - 1) || parseInt($(['#grid', (j + x), (i + y)].join('')).attr('filled-shape')) === 3)) {
+                            $("div[filled-shape=1]").attr('filled-shape', '3');
 //                            console.group(shape.name);
 //                            console.log(['(', (j + x), ',', (i + y), ')'].join(''));
 //                            console.groupEnd(shape.name);
@@ -394,7 +386,7 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                 shapePosition = parseInt(shapePosition > DOMAINSHAPE ? (DOMAINSHAPE - 1) : shapePosition, 0);
                 currentShape = shapes[(shapePosition)];
                 console.group([currentShape.name, '-moveShape ', y].join(''));
-                console.log(['rotation : ',r,'\ndescription form :\n',currentShape.blocks[r].join('\n')].join(''));
+                console.log(['rotation : ', r, '\ndescription form :\n', currentShape.blocks[r].join('\n')].join(''));
                 console.log(['new coor (', x, ',', y, '), old = (', xLast, ',', yLast, ')'].join(''));
 
 //                return shapes[(shapePosition)];
@@ -417,7 +409,7 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
             function moveRight(shape, texture) {
                 if (isValidSideMove(r, (x + 1), y, shape)) {
                     ++x;
-                    redrawShape(r, shape);
+                    redrawShape(r, shape); 
                 }
             }
 
@@ -440,16 +432,24 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
 //                    console.log(e.charCode || e.keyCode);
                     switch (e.charCode || e.keyCode) {
                         case 37:
-                            moveLeft(currentShape);
+                            if (tetrisTimer) {
+                                moveLeft(currentShape);
+                            }
                             break;
                         case 38:
-                            rotateShape(currentShape);
+                            if (tetrisTimer) {
+                                rotateShape(currentShape);
+                            }
                             break;
                         case 39:
-                            moveRight(currentShape);
+                            if (tetrisTimer) {
+                                moveRight(currentShape);
+                            }
                             break;
                         case 40:
-                            moveDown(currentShape);
+                            if (tetrisTimer) {
+                                moveDown(currentShape);
+                            }
                             break;
                         case 80:
                             if (tetrisTimer) {
