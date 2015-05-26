@@ -8,6 +8,7 @@ try {
     $controller = null;
     switch ($_GET['type']) {
         case 'js':
+            header("Content-Type:text/javascript");
             $controller = new InyectCssJSController();
             $result = $controller->inyectJsFiles();
             break;

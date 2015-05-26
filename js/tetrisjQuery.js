@@ -4,6 +4,8 @@
 
         var el;
         var $el;
+        var $gridNextShapeEl;
+
         var DOMAINSHAPE = 4;
         //var textures = ['url(img/rule0.jpg)'];
         var tetrisTimer = null;
@@ -55,9 +57,9 @@
                         [0, 0, 0, 0]
                     ],
                     [
-                        [0, 1, 1, 0], //third form 90°
-                        [0, 1, 0, 0],
-                        [0, 1, 0, 0],
+                        [1, 1, 0, 0], //third form 90°
+                        [1, 0, 0, 0],
+                        [1, 0, 0, 0],
                         [0, 0, 0, 0]
                     ],
                     [
@@ -137,9 +139,9 @@
                         [0, 0, 0, 0]
                     ],
                     [
-                        [0, 1, 0, 0], //second form 90°
-                        [0, 1, 1, 0],
-                        [0, 0, 1, 0],
+                        [1, 0, 0, 0], //second form 90°
+                        [1, 1, 0, 0],
+                        [0, 1, 0, 0],
                         [0, 0, 0, 0]
                     ],
                     [
@@ -149,9 +151,9 @@
                         [0, 0, 0, 0]
                     ],
                     [
-                        [0, 1, 0, 0], //third form 90°
-                        [0, 1, 1, 0],
-                        [0, 0, 1, 0],
+                        [1, 0, 0, 0], //third form 90°
+                        [1, 1, 0, 0],
+                        [0, 1, 0, 0],
                         [0, 0, 0, 0]
                     ]
                 ]
@@ -178,9 +180,9 @@
                         [0, 0, 0, 0]
                     ],
                     [
-                        [0, 1, 0, 0], //third form 90°
-                        [0, 1, 1, 0],
-                        [0, 1, 0, 0],
+                        [1, 0, 0, 0], //third form 90°
+                        [1, 1, 0, 0],
+                        [1, 0, 0, 0],
                         [0, 0, 0, 0]
                     ]
                 ]
@@ -217,11 +219,17 @@
                 , name: 'Z'
             }
         };
+        var score = 0;
+        var lines = 0;
+        var level = 1;
+        var tablePunctuation = {1: 4, 2: 8, 3: 16, 4: 24};
 
         var defaults = {
             n: 9,
             m: 20,
-            textures: ['url(img/rule0.jpg)', 'url(img/rule1.jpg)', 'url(img/rule2.png)', 'url(img/rule3.jpg)'],
+            nextSizeN: 5,
+            nextSizeM: 6,
+            textures: ['url(img/rule0.jpg)', 'url(img/rule1.jpg)', 'url(img/rule2.jpg)', 'url(img/rule3.jpg)', 'url(img/rule4.jpg)'],
             currentShape: null,
             r: 0,
             x: 2,
@@ -229,10 +237,22 @@
             rLast: 0,
             xLast: 0,
             gridPrefix: 'grid',
-            gridClass: 'tetrisGrid',
+            gridNextShapeEl: '#nextShapePanel',
+            gridNextShapePrefix: 'gridNextShape',
+            gridClass: '.tetrisGrid',
+            gridNextShapeClass: '.nextSharpGrid',
             attrFilledGrid: 'filled-shape',
             elementtoFill: 'div',
             yLast: 0,
+            newGameButton: '',
+            cancelGameButton: '',
+            menuGameOver: '',
+            menuGamePaused: '',
+            continueGame: '',
+            scoreElement: '',
+            lineElement: '',
+            levelElement: '',
+            timeAnimationWindow: 400,
             fps: 400
         };
 
@@ -242,21 +262,14 @@
             el = element;
             $el = $(element);
             settings = $.extend({}, defaults, options);
+            $gridNextShapeEl = $(settings.gridNextShapeEl);
+            settings.$lineElement = $(settings.lineElement);
+            settings.$scoreElement = $(settings.scoreElement);
+
             generateGrid();
+            generateNextShapeGrid();
 
-            settings.r = (settings.r || 0);
-            settings.x = (settings.x || 2);
-            settings.y = (settings.y || 0);
-            settings.rLast = (settings.r || 0);
-            settings.xLast = (settings.xLast || settings.x);
-            settings.yLast = (settings.yLast || settings.y);
-            getNewShape();
-
-            draw(settings.r, settings.x, settings.y, shape.texture);
-//            moveDown();
-//            moveDown();
-//            tetrisTimer= '8';
-            tetrisTimer = window.setInterval(moveDown, settings.fps);
+            newGame();
             startEvents();
         }
 
@@ -264,7 +277,7 @@
             var k = 0;
             for (var i = 0; i < settings.m; i++) {
                 for (var j = 0; j < settings.n; j++) {
-                    var $grid = $(['<div id="', settings.gridPrefix, j, i, '" class="', settings.gridClass, '">', '</div>'].join(''));
+                    var $grid = $(['<div id="', settings.gridPrefix, j, i, '" class="', settings.gridClass.replace('.', ''), '">', '</div>'].join(''));
                     $grid.data({x: j, y: i});
                     $el.append($grid);
                     ++k;
@@ -273,6 +286,18 @@
             }
         }
 
+        var generateNextShapeGrid = function () {
+            var k = 0;
+            for (var i = 0; i < settings.nextSizeN; i++) {
+                for (var j = 0; j < settings.nextSizeM; j++) {
+                    var $grid = $(['<div id="', settings.gridNextShapePrefix, j, i, '" class="', settings.gridNextShapeClass.replace('.', ''), '">', '</div>'].join(''));
+                    $grid.data({x: j, y: i});
+                    $gridNextShapeEl.append($grid);
+                    ++k;
+                }
+                $gridNextShapeEl.append('<div class="breakFloat"></div>');
+            }
+        }
 
         var clearBuffer = function (r, x, y) {
             //clear the old position of shape            
@@ -302,6 +327,18 @@
             }
         }
 
+        var drawNextShape = function () {
+            var i, j;
+            $(settings.gridNextShapeClass).removeAttr('style');
+            for (i = 0; i < DOMAINSHAPE; i++) {
+                for (j = 0; j < DOMAINSHAPE; j++) {
+                    if (nextShape.blocks[nextShape.r][i][j]) {
+                        $(['#', settings.gridNextShapePrefix, (j + 1), (i + 1)].join('')).css({'backgroundImage': nextShape.texture});
+                    }
+                }
+            }
+        }
+
         var moveDown = function (shape, texture) {
             if (isValidMove(settings.r, settings.x, (settings.y + 1), shape)) {
                 ++settings.y;
@@ -315,21 +352,29 @@
                 settings.yLast = (settings.yLast || settings.y);
                 $([settings.elementtoFill, '[', settings.attrFilledGrid, '=', 1, ']'].join('')).attr(settings.attrFilledGrid, 3);
                 completeLines();
-                getNewShape();
+                if (!getNewShape(nextShape)) {
+                    window.clearInterval(tetrisTimer);
+                    showMenuGameOver();
+                    return false;
+                }
+                showNextShape();
             }
         }
+
         var moveLeft = function () {
             if (isValidMove(settings.r, (settings.x - 1), settings.y, shape)) {
                 --settings.x;
                 clearBuffer(settings.r, settings.x, settings.y);
             }
         }
+
         var moveRight = function () {
             if (isValidMove(settings.r, (settings.x + 1), settings.y, shape)) {
                 ++settings.x;
                 clearBuffer(settings.r, settings.x, settings.y);
             }
         }
+
         var rotateShape = function () {
 
             if ((settings.r + 1) >= (DOMAINSHAPE)) {
@@ -341,23 +386,50 @@
             }
         }
 
-
-        var getNewShape = function (r, x, y) {
-            settings.xLast = settings.x;
-            settings.yLast = settings.y;
-            settings.r = 1 + Math.random() * DOMAINSHAPE;
-            settings.r = parseInt(settings.r > DOMAINSHAPE ? (DOMAINSHAPE - 1) : settings.r, 0);
-            settings.rLast = settings.r;
+        var randomShape = function () {
             var shapePosition = Math.floor(Math.random() * $.map(shapes, function () {
                 return this;
             }).length);
+
+            return shapes[(shapePosition)];
+        }
+
+        var randomTexture = function () {
             var texturePosition = Math.floor(Math.random() * settings.textures.length);
-            shape = shapes[(shapePosition)];
-            shape.texture = settings.textures[texturePosition];
+            return settings.textures[texturePosition];
+        }
+
+        var showNextShape = function () {
+            nextShape = randomShape();
+            nextShape.texture = randomTexture();
+            nextShape.r = 1 + Math.random() * DOMAINSHAPE;
+            nextShape.r = parseInt(nextShape.r > DOMAINSHAPE ? (DOMAINSHAPE - 1) : nextShape.r, 0);
+            drawNextShape();
+        }
+
+        var getNewShape = function (nextShape) {
+            settings.xLast = settings.x;
+            settings.yLast = settings.y;
+            if (!nextShape) {
+                shape = randomShape();
+                settings.r = 1 + Math.random() * DOMAINSHAPE;
+                settings.r = parseInt(settings.r > DOMAINSHAPE ? (DOMAINSHAPE - 1) : settings.r, 0);
+                settings.rLast = settings.r;
+                shape.texture = randomTexture();
+            } else {
+                settings.r = nextShape.r;
+                settings.rLast = settings.r;
+                shape = nextShape;
+                shape.texture = nextShape.texture;
+            }
+            return isValidMove(settings.r, settings.x, settings.y);
         }
 
         var isValidMove = function (r, x, y) {
             var i, j;
+            if (r < 0) {
+                r = 0;
+            }
             for (i = 0; i < DOMAINSHAPE; i++) {
                 for (j = 0; j < DOMAINSHAPE; j++) {
                     try {
@@ -367,7 +439,6 @@
                             return false;
                         }
                     } catch (e) {
-                        console.log(e.stack);
                         return false
                     }
 
@@ -380,58 +451,80 @@
         }
 
         var completeLines = function () {
-            var $completeElements = 0;
+
+            var $completeElements = null;
             var data = null;
             var $_thisRowFill = null;
             var css = {backgroundColor: 'none'};
-            for (i = settings.m - 1; i > 0; i--) {
-                try {
-                    $completeElements = $(['.', settings.gridClass, '[', settings.attrFilledGrid, '=', 3, ']'].join('')).filter(function () {
-                        return this.id.match(new RegExp('^grid[0-9]{1}' + i + '$', 'gi'));
-                    });
-
-                    if ($completeElements.length === settings.n) {
-                        $completeElements.css({'backgroundImage': 'none'}).attr(settings.attrFilledGrid, 0);
-                        console.log(i - 1);
-                        for (j = (i - 1); j > 0; j--) {
-                            console.log(j);
-                            var $elementsMove = $(['.', settings.gridClass, '[', settings.attrFilledGrid, '=', 3, ']'].join(''));
-//                            $(['.', settings.gridClass, '[', settings.attrFilledGrid, '=', 3, ']'].join('')).each(function(){
-//                                console.log($(this)[0]);
-                            for (k = 0; k < $elementsMove.length; k++) {
-                                $_thisRowFill = $($elementsMove[k]);
+            var kLinesFound = 0;
+            for (var i = settings.m - 1; i > 0; i--) {
+                $completeElements = $([settings.gridClass, '[', settings.attrFilledGrid, '=', 3, ']'].join('')).filter(function () {
+                    return this.id.match(new RegExp('^grid[0-9]{1}' + i + '$', 'gi'));
+                });
+                if ($completeElements.length === settings.n) {
+                    kLinesFound++;
+                    $completeElements.css({'backgroundImage': 'none'}).attr(settings.attrFilledGrid, 0).promise().done(function () {
+                        for (var j = (i - 1); j > -1; j--) {
+                            var $elementsMove = $([settings.gridClass, '[', settings.attrFilledGrid, '=', 3, ']'].join('')).filter(function () {
+                                return this.id.match(new RegExp('^grid[0-9]{1}' + j + '$', 'gi'));
+                            }).each(function () {
+                                $_thisRowFill = $(this);
                                 data = $_thisRowFill.data();
-                                if ($(['#', settings.gridPrefix, data.x, data.y + 1].join(''))[0]) {                                    
+                                if ($(['#', settings.gridPrefix, data.x, data.y + 1].join(''))[0]) {
                                     css.backgroundImage = $_thisRowFill.css('backgroundImage');
-                                    console.log(css.backgroundImage);
                                     $_thisRowFill.css({'backgroundImage': 'none'}).attr(settings.attrFilledGrid, 0);
                                     $(['#', settings.gridPrefix, data.x, data.y + 1].join('')).css(css).attr(settings.attrFilledGrid, 3);
-                                    console.group(data.x + '-' + data.y);
-                                    console.log($_thisRowFill[0]);
-                                    console.log($(['#', settings.gridPrefix, data.x, data.y + 1].join(''))[0]);
-                                    console.groupEnd(data.x + '-' + data.y);
-                                    //   delay(500);
                                 }
+                            });
+                            if ($elementsMove.length > 0) {
+                                i++;
                             }
-//                            });
                         }
-                    }
-                } catch (e) {
-                    console.log(e.stack);
-                    //continue
+                    });
                 }
             }
-            delete completeElements;
-        }
-        function delay(ms) {
-            ms += new Date().getTime();
-            while (new Date() < ms) {
+
+            if (!isNaN(tablePunctuation[kLinesFound])) {
+                settings.$scoreElement.text(tablePunctuation[kLinesFound] += parseInt(settings.$scoreElement.text()));
             }
+            settings.$lineElement.text(kLinesFound += parseInt(settings.$lineElement.text()));
+            delete $completeElements;
+            delete data;
+            delete $_thisRowFill;
+            delete css;
+            delete i;
         }
+
+        var showMenuGameOver = function (event) {
+            $(settings.menuGameOver).fadeIn(settings.timeAnimationWindow);
+        }
+
+        var showPausedMenu = function (event) {
+            $(settings.menuGamePaused).stop(true, true).fadeToggle(settings.timeAnimationWindow);
+        }
+
+        var hideMenuGameOver = function (event) {
+            $(settings.menuGameOver).fadeOut(settings.timeAnimationWindow);
+        }
+
+        var newGame = function (event) {
+            hideMenuGameOver();
+            $(settings.gridClass).removeAttr('style').removeAttr(settings.attrFilledGrid);
+            settings.r = (settings.r || 0);
+            settings.x = (settings.x || 2);
+            settings.y = (settings.y || 0);
+            settings.rLast = (settings.r || 0);
+            settings.xLast = (settings.xLast || settings.x);
+            settings.yLast = (settings.yLast || settings.y);
+            getNewShape();
+            showNextShape();
+            draw(settings.r, settings.x, settings.y, shape.texture);
+            tetrisTimer = window.setInterval(moveDown, settings.fps);
+        }
+
         var startEvents = function () {
-            $(window).keydown(function (e) {
-//                    console.log(e.charCode || e.keyCode);
-                switch (e.charCode || e.keyCode) {
+            $(window).keydown(function (event) {
+                switch (event.charCode || event.keyCode) {
                     case 37:
                         if (tetrisTimer) {
                             moveLeft();
@@ -456,28 +549,21 @@
                         if (tetrisTimer) {
                             window.clearInterval(tetrisTimer);
                             tetrisTimer = null;
+                            showPausedMenu(event);
                         } else {
                             tetrisTimer = window.setInterval(moveDown, 600);
+                            showPausedMenu(event);
                         }
-                        //                            $('#start').unclick(tetris.pause).val('resume').click(tetris.resume);
                         break;
-//                        case 106:
-//                            moveLeft();
-//                            break; // J
-//                        case 76:
-//                        case 108:
-//                            moveRight();
-//                            break; // L
-//                        case 75:
-//                        case 107:
-//                            tetris.moveDown();
-//                            break; // K
-//                        case 73:
-//                        case 105:
-//                            tetris.rotate();
-                        //                            break; // I
                 }
             });
+            $(settings.newGameButton).click(newGame);
+            $(settings.cancelGameButton).click(hideMenuGameOver);
+//            $(settings.continueGame).click(function(event){
+//                showPausedMenu(event);
+//                isPausedPressed = true;
+//                tetrisTimer = window.setInterval(moveDown, 600);
+//            });
         }
 
         return this.each(function () {

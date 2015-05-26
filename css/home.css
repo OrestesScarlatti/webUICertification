@@ -36,13 +36,14 @@ table{
 
 .tetrisGrid,.backgroundRule0{
     height: 1.5rem;   
-    border:1px solid #59869c;    
+    /*border:1px solid #59869c;*/    
     float: left;    
     text-align: center;
     font-size: 10px;
     line-height: 1.5rem;
     color: white;    
     background-position: center;
+    background-size: cover;
 }
 .breakFloat{
     clear: both;
@@ -50,14 +51,35 @@ table{
 .nextPanel{
     display: inline-block;
     vertical-align: top;    
-    border:1px solid #59869c;        
-    margin-left: 5px;
+    border:3px solid #59869c;        
+    margin: 0 25px;
     border-radius: 5px;    
+}
+.scorePanel{
+    display: inline-block;
+    vertical-align: top;    
+}
+.scoreSubPanel,.scoreSubPanelPoints{
+    display: block;
+    vertical-align: top;    
+    border:3px solid #59869c;        
+    margin: 0 25px;
+    border-radius: 5px;
+}
+.scoreSubPanelPoints{    
+    margin: 25px 25px;
 }
 .nextSharpGrid{
     width: 1.5rem;
-    height: 1.5rem;    
-    border:1px solid #59869c;    
+    height: 1.5rem;        
+    float: left;
+    background-position: center;
+    background-size: cover;
+}
+.letterGrid{
+    width: .6rem;
+    height: .6rem;    
+    /*border:1px solid #59869c;*/    
     float: left;    
 }
 
@@ -65,7 +87,141 @@ table{
     border: 1px solid transparent;
     background-image: url(../../../img/rule0.jpg);    
 }
-
 .lineGrid{
     position: absolute;
+}
+
+.overlayWrapper{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 900;
+    display: none;
+}
+.overlay{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url(../../../img/gameOver.jpg);    
+    background-size: cover;
+    background-position: center;
+    opacity: .5;
+    z-index: 901;
+}
+
+.overlayPausedGame{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url(../../../img/pausedGame.jpg);    
+    background-size: cover;
+    background-position: center;
+    opacity: .7;
+    z-index: 901;
+}
+
+.dialogBox{
+    width:70%;
+    height:200px;
+    background-color:#000;    
+    position: absolute;
+    left: 0;
+    right: 0;
+    top:30%;
+    z-index: 910;
+    margin: 0 auto;
+    box-shadow: inset 0px 0px 33px #FFF;
+    -moz-box-shadow: inset 0px 0px 33px #FFF;
+    -webkit-box-shadow: inset 0px 0px 33px #FFF;
+    border-radius: 8px;
+}
+
+.dialogBoxPaused{
+    width:40%;
+    height:200px;
+    background-color:#000;    
+    position: absolute;
+    left: 0;
+    right: 0;
+    top:30%;
+    z-index: 910;
+    margin: 0 auto;
+    box-shadow: inset 0px 0px 33px #FFF;
+    -moz-box-shadow: inset 0px 0px 33px #FFF;
+    -webkit-box-shadow: inset 0px 0px 33px #FFF;
+    border-radius: 8px;
+}
+
+.letterGrid{
+    background-color:#000;    
+}
+
+.wrapperMessage{
+    text-align: center;
+    padding-top: 20px;
+}
+.wrapperMessagePaused{
+    position: absolute;
+    text-align: center;
+    padding-top: 20px;
+    z-index: 902;    
+    left: 0;
+    right: 0;
+}
+.message{
+    display: inline-block;
+    background-image: url(../../../img/messageBackground02.jpg);
+    background-size: cover;
+}
+.messagePaused{
+    display: inline-block;
+    background-image: url(../../../img/messageBackground02.jpg);
+    background-size: cover;
+    background-position: center;
+}
+.backgroundLetters{
+    background-color: transparent;
+    /*background-image: url(../../../img/letters.jpg);*/
+    /*background-size: contain;*/
+}
+.wrapperButton{
+    width: 50%;
+    margin: 45px auto;
+}
+.wrapperButtonPaused{
+    width: 100%;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.button{
+    width: 40%;
+    height: 40px;
+    background-image: url(../../../img/button0.jpg);
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    text-align: center;
+    color: #FFF;
+    line-height: 40px;
+    cursor: pointer;
+    box-shadow: inset 0px 1px 13px #31708f;
+    display: inline-block;
+}
+
+.button:hover{
+    /*.button{*/
+    box-shadow: inset 0px 1px 13px #6594AB;
+}
+.floatLeft{float: left; }
+.floatRight{float: right; }
+
+.dataTitle{
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+}
+.dataScore{
+    color: white;
+    font-size: 25px;
 }
