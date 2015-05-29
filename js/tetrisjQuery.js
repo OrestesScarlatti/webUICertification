@@ -5,7 +5,7 @@
         var el;
         var $el;
         var $gridNextShapeEl;
-
+        var isStartedGame = false;
         var DOMAINSHAPE = 4;
         //var textures = ['url(img/rule0.jpg)'];
         var tetrisTimer = null;
@@ -245,13 +245,18 @@
             elementtoFill: 'div',
             yLast: 0,
             newGameButton: '',
+            overlayPausedGame: '',
+            menuGameControllers: '',
+            gameControllers: '',
             cancelGameButton: '',
             menuGameOver: '',
+            closeControllerMenu: '',
             menuGamePaused: '',
             continueGame: '',
             scoreElement: '',
             lineElement: '',
             levelElement: '',
+            kLinesFound: '',
             timeAnimationWindow: 400,
             fps: 400
         };
@@ -265,11 +270,12 @@
             $gridNextShapeEl = $(settings.gridNextShapeEl);
             settings.$lineElement = $(settings.lineElement);
             settings.$scoreElement = $(settings.scoreElement);
-
+            settings.$levelElement = $(settings.levelElement);
+//
             generateGrid();
             generateNextShapeGrid();
-
-            newGame();
+//
+//            newGame();
             startEvents();
         }
 
@@ -487,7 +493,18 @@
             if (!isNaN(tablePunctuation[kLinesFound])) {
                 settings.$scoreElement.text(tablePunctuation[kLinesFound] += parseInt(settings.$scoreElement.text()));
             }
-            settings.$lineElement.text(kLinesFound += parseInt(settings.$lineElement.text()));
+            lines = (kLinesFound += parseInt(settings.$lineElement.text()));
+            settings.$lineElement.text(lines);            
+            if (lines % 4 === 0) {
+                console.log('here in 10 lines dude');                
+                level = (level? level:1) + parseInt(settings.$levelElement.text());
+                settings.$levelElement.text(level);
+                settings.fps -= (150);//TODO correct this section
+                window.clearInterval(tetrisTimer);
+                tetrisTimer = null;
+                tetrisTimer = window.setInterval(moveDown, settings.fps);
+            }
+
             delete $completeElements;
             delete data;
             delete $_thisRowFill;
@@ -503,27 +520,46 @@
             $(settings.menuGamePaused).stop(true, true).fadeToggle(settings.timeAnimationWindow);
         }
 
+        var toggleGameControllersMenu = function (event) {
+            if (!$(settings.menuGameControllers).is(':visible')) {
+                window.clearInterval(tetrisTimer);
+            } else {
+                tetrisTimer = window.setInterval(moveDown, settings.fps);
+            }
+            $(settings.menuGameControllers).stop(true, true).fadeToggle(settings.timeAnimationWindow);
+        }
+
+        var hidePausedMenu = function (event) {
+            $(settings.menuGamePaused).stop(true, true).fadeOut(settings.timeAnimationWindow);
+            tetrisTimer = window.setInterval(moveDown, settings.fps);
+        }
+
         var hideMenuGameOver = function (event) {
             $(settings.menuGameOver).fadeOut(settings.timeAnimationWindow);
         }
 
         var newGame = function (event) {
-            hideMenuGameOver();
-            $(settings.gridClass).removeAttr('style').removeAttr(settings.attrFilledGrid);
-            settings.r = (settings.r || 0);
-            settings.x = (settings.x || 2);
-            settings.y = (settings.y || 0);
-            settings.rLast = (settings.r || 0);
-            settings.xLast = (settings.xLast || settings.x);
-            settings.yLast = (settings.yLast || settings.y);
-            getNewShape();
-            showNextShape();
-            draw(settings.r, settings.x, settings.y, shape.texture);
-            tetrisTimer = window.setInterval(moveDown, settings.fps);
+            if (!isStartedGame) {
+                hideMenuGameOver();
+                window.clearInterval(tetrisTimer);
+                tetrisTimer = null;
+                $(settings.gridClass).removeAttr('style').removeAttr(settings.attrFilledGrid);
+                settings.r = 0;
+                settings.x = 2;
+                settings.y = 0;
+                settings.rLast = (settings.r || 0);
+                settings.xLast = (settings.xLast || settings.x);
+                settings.yLast = (settings.yLast || settings.y);
+                getNewShape();
+                showNextShape();
+                draw(settings.r, settings.x, settings.y, shape.texture);
+                tetrisTimer = window.setInterval(moveDown, settings.fps);
+            }
         }
 
         var startEvents = function () {
             $(window).keydown(function (event) {
+//                console.log(event.charCode || event.keyCode);
                 switch (event.charCode || event.keyCode) {
                     case 37:
                         if (tetrisTimer) {
@@ -545,30 +581,46 @@
                             moveDown();
                         }
                         break;
+                    case 78:
+                        if (isStartedGame) {
+                            newGame();
+                        }
+                        break;
                     case 80:
+                        if (!isStartedGame) {
+                            return false;
+                        }
+
                         if (tetrisTimer) {
                             window.clearInterval(tetrisTimer);
                             tetrisTimer = null;
                             showPausedMenu(event);
                         } else {
-                            tetrisTimer = window.setInterval(moveDown, 600);
+                            tetrisTimer = window.setInterval(moveDown, settings.fps);
                             showPausedMenu(event);
                         }
                         break;
+                    case 83:
+                        if (!isStartedGame) {
+                            newGame();
+                            isStartedGame = true;
+                        }
+                        break;
                 }
-            });
+            }
+            );
             $(settings.newGameButton).click(newGame);
             $(settings.cancelGameButton).click(hideMenuGameOver);
-//            $(settings.continueGame).click(function(event){
-//                showPausedMenu(event);
-//                isPausedPressed = true;
-//                tetrisTimer = window.setInterval(moveDown, 600);
-//            });
+            $(settings.overlayPausedGame).click(hidePausedMenu);
+            $(settings.continueGame).click(hidePausedMenu);
+            $(settings.gameControllers).click(toggleGameControllersMenu);
+            $(settings.closeControllerMenu).click(toggleGameControllersMenu);
         }
 
         return this.each(function () {
             ini(this, options);
             return settings;
-        });
+        }
+        );
     }
 })(jQuery);

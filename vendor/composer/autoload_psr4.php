@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'globant\\' => array($baseDir . '/globant/webUICertification'),
+    'globant\\' => array($baseDir . '/globant/WebUICertification'),
 );

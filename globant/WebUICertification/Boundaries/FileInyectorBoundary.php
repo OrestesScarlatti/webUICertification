@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
+error_log(__DIR__ . '/../../../vendor/autoload.php');
 
 use globant\Controllers\InyectCssJSController as InyectCssJSController;
 
