@@ -301,14 +301,22 @@ table{
 }
 .controlDescription{
     color: white;
-    width: 130px;
+    width: 126px;
     text-align: right;
     float: left;
 }
-ul{
-    display: inline-block;
+.ulLeft{
+    float: left;
+    padding: 0px;
     vertical-align: top;
-    width: 30%;
+    width: 44%;
+}
+.ulRight{
+    float: right;
+    padding: 0px;
+    padding-left: 25px;
+    vertical-align: top;
+    width: 44%;
 }
 li {
     /*display: inline;*/
@@ -317,5 +325,15 @@ li {
     list-style: outside none none;
     line-height: 28px;
     height: 40px;
-    width: 180px;
+    width: 166px;
+}
+.ulLeft .controlDescription{
+    width: 112px;
+}
+.ulLeft li{
+    width: 155px;
+}
+.commandValue{
+    color :#72b1d5;
+    font-weight: bold;
 }

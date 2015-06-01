@@ -2,11 +2,16 @@
 (function ($) {
     $.fn.tetrisjQuery = function (options) {
 
+
+        var DOMAINSHAPE = 4;
+        var LINESTOLEVELUP = 4;
+        var INCREASESPEED = 10;
+
         var el;
         var $el;
         var $gridNextShapeEl;
         var isStartedGame = false;
-        var DOMAINSHAPE = 4;
+
         //var textures = ['url(img/rule0.jpg)'];
         var tetrisTimer = null;
         var shape = null;
@@ -253,6 +258,7 @@
             closeControllerMenu: '',
             menuGamePaused: '',
             continueGame: '',
+            newGamePanelButton: '',
             scoreElement: '',
             lineElement: '',
             levelElement: '',
@@ -262,7 +268,7 @@
         };
 
         var settings = null;
-//        //var settings = $.extend({}, defaults, options);
+
         var ini = function (element, options) {
             el = element;
             $el = $(element);
@@ -271,12 +277,15 @@
             settings.$lineElement = $(settings.lineElement);
             settings.$scoreElement = $(settings.scoreElement);
             settings.$levelElement = $(settings.levelElement);
-//
+
             generateGrid();
             generateNextShapeGrid();
-//
-//            newGame();
+
             startEvents();
+                        
+//            $(settings.gridClass).filter(function () {
+//                return this.id.match(new RegExp('^grid[0-6]{1}1[7-9]{1}$', 'gi'));
+//            }).attr({'filled-shape': 3}).css({backgroundImage:settings.textures[0]});
         }
 
         var generateGrid = function () {
@@ -308,7 +317,6 @@
         var clearBuffer = function (r, x, y) {
             //clear the old position of shape            
             draw(settings.rLast, settings.xLast, settings.yLast, 'none');
-
             // draw to the next one               
             draw(r, x, y, shape.texture);
             // change stats
@@ -345,7 +353,7 @@
             }
         }
 
-        var moveDown = function (shape, texture) {
+        var moveDown = function (texture) {
             if (isValidMove(settings.r, settings.x, (settings.y + 1), shape)) {
                 ++settings.y;
                 clearBuffer(settings.r, settings.x, settings.y);
@@ -396,8 +404,10 @@
             var shapePosition = Math.floor(Math.random() * $.map(shapes, function () {
                 return this;
             }).length);
+//            var shapePosition = Math.floor(Math.random() * 1);
+            var newShape = jQuery.extend(true, {}, shapes);
 
-            return shapes[(shapePosition)];
+            return newShape[(shapePosition)];
         }
 
         var randomTexture = function () {
@@ -405,17 +415,10 @@
             return settings.textures[texturePosition];
         }
 
-        var showNextShape = function () {
-            nextShape = randomShape();
-            nextShape.texture = randomTexture();
-            nextShape.r = 1 + Math.random() * DOMAINSHAPE;
-            nextShape.r = parseInt(nextShape.r > DOMAINSHAPE ? (DOMAINSHAPE - 1) : nextShape.r, 0);
-            drawNextShape();
-        }
-
         var getNewShape = function (nextShape) {
             settings.xLast = settings.x;
             settings.yLast = settings.y;
+
             if (!nextShape) {
                 shape = randomShape();
                 settings.r = 1 + Math.random() * DOMAINSHAPE;
@@ -424,11 +427,20 @@
                 shape.texture = randomTexture();
             } else {
                 settings.r = nextShape.r;
-                settings.rLast = settings.r;
+                settings.rLast = nextShape.r;
                 shape = nextShape;
                 shape.texture = nextShape.texture;
             }
+
             return isValidMove(settings.r, settings.x, settings.y);
+        }
+
+        var showNextShape = function () {
+            nextShape = randomShape();
+            nextShape.texture = randomTexture();
+            nextShape.r = 1 + Math.random() * DOMAINSHAPE;
+            nextShape.r = parseInt(nextShape.r > DOMAINSHAPE ? (DOMAINSHAPE - 1) : nextShape.r, 0);
+            drawNextShape();
         }
 
         var isValidMove = function (r, x, y) {
@@ -445,7 +457,8 @@
                             return false;
                         }
                     } catch (e) {
-                        return false
+                        console.log(e.stack);
+                        return false;
                     }
 
                     if (shape.blocks[r][i][j] && ((j + x) < 0 || (j + x) > settings.n - 1)) {
@@ -456,6 +469,10 @@
             return true;
         }
 
+        /**
+         * Searching if exist complete lines and 
+         * calculate next level
+         */
         var completeLines = function () {
 
             var $completeElements = null;
@@ -491,15 +508,15 @@
             }
 
             if (!isNaN(tablePunctuation[kLinesFound])) {
-                settings.$scoreElement.text(tablePunctuation[kLinesFound] += parseInt(settings.$scoreElement.text()));
+                settings.$scoreElement.text(tablePunctuation[kLinesFound] + parseInt(settings.$scoreElement.text()));
+                lines = (kLinesFound += parseInt(settings.$lineElement.text()));
+                settings.$lineElement.text(lines);
             }
-            lines = (kLinesFound += parseInt(settings.$lineElement.text()));
-            settings.$lineElement.text(lines);            
-            if (lines % 4 === 0) {
-                console.log('here in 10 lines dude');                
-                level = (level? level:1) + parseInt(settings.$levelElement.text());
+
+            if (lines % 4 === 0 && kLinesFound > 0) {
+                level = (level ? level : 1) + parseInt(settings.$levelElement.text());
                 settings.$levelElement.text(level);
-                settings.fps -= (150);//TODO correct this section
+                settings.fps -= (INCREASESPEED);
                 window.clearInterval(tetrisTimer);
                 tetrisTimer = null;
                 tetrisTimer = window.setInterval(moveDown, settings.fps);
@@ -513,6 +530,8 @@
         }
 
         var showMenuGameOver = function (event) {
+            isStartedGame = false;
+            $(settings.newGameButton).not(settings.newGamePanelButton).removeAttr('change-button', 1).text('Start Game');
             $(settings.menuGameOver).fadeIn(settings.timeAnimationWindow);
         }
 
@@ -521,11 +540,6 @@
         }
 
         var toggleGameControllersMenu = function (event) {
-            if (!$(settings.menuGameControllers).is(':visible')) {
-                window.clearInterval(tetrisTimer);
-            } else {
-                tetrisTimer = window.setInterval(moveDown, settings.fps);
-            }
             $(settings.menuGameControllers).stop(true, true).fadeToggle(settings.timeAnimationWindow);
         }
 
@@ -555,11 +569,35 @@
                 draw(settings.r, settings.x, settings.y, shape.texture);
                 tetrisTimer = window.setInterval(moveDown, settings.fps);
             }
+
+            isStartedGame = true;
+        }
+
+        var tooglePause = function (callback, event) {
+
+            if (!isStartedGame) {
+                callback(event);
+                return true;
+            }
+
+            if (tetrisTimer) {
+                window.clearInterval(tetrisTimer);
+                tetrisTimer = null;
+                callback(event);
+            } else {
+                tetrisTimer = window.setInterval(moveDown, settings.fps);
+                callback(event);
+            }
+            return true;
+        }
+
+        var changeToPause = function ($this) {
+            $this.not(settings.newGamePanelButton).attr('change-button', 1).text('Pause Game');
         }
 
         var startEvents = function () {
             $(window).keydown(function (event) {
-//                console.log(event.charCode || event.keyCode);
+
                 switch (event.charCode || event.keyCode) {
                     case 37:
                         if (tetrisTimer) {
@@ -583,38 +621,48 @@
                         break;
                     case 78:
                         if (isStartedGame) {
+                            isStartedGame = false;
                             newGame();
                         }
+                        break;
+                    case 79:
+                        tooglePause(toggleGameControllersMenu);
                         break;
                     case 80:
                         if (!isStartedGame) {
                             return false;
                         }
-
-                        if (tetrisTimer) {
-                            window.clearInterval(tetrisTimer);
-                            tetrisTimer = null;
-                            showPausedMenu(event);
-                        } else {
-                            tetrisTimer = window.setInterval(moveDown, settings.fps);
-                            showPausedMenu(event);
-                        }
+                        tooglePause(showPausedMenu, event);
                         break;
                     case 83:
                         if (!isStartedGame) {
                             newGame();
-                            isStartedGame = true;
+                            changeToPause($(settings.newGameButton));
                         }
                         break;
                 }
             }
             );
-            $(settings.newGameButton).click(newGame);
+            $(settings.newGameButton).click(function (event) {
+                var $this = $(this);
+                if (parseInt($this.attr('change-button'))) {
+                    tooglePause(showPausedMenu);
+                    return true;
+                }
+                changeToPause($this);
+                newGame();
+                delete $this;
+                return true;
+            });
             $(settings.cancelGameButton).click(hideMenuGameOver);
             $(settings.overlayPausedGame).click(hidePausedMenu);
             $(settings.continueGame).click(hidePausedMenu);
-            $(settings.gameControllers).click(toggleGameControllersMenu);
-            $(settings.closeControllerMenu).click(toggleGameControllersMenu);
+            $(settings.gameControllers).click(function (event) {
+                tooglePause(toggleGameControllersMenu);
+            });
+            $(settings.closeControllerMenu).click(function (event) {
+                tooglePause(toggleGameControllersMenu);
+            });
         }
 
         return this.each(function () {

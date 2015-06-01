@@ -547,7 +547,7 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                         <div class="breakFloat"></div>                   
                     </div>
                 </div>
-                <ul>
+                <ul class="ulLeft" >
                     <li>
                         <div class="controlDescription">move left:</div>
                         <div class="arrowLeft"></div>
@@ -569,17 +569,21 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                         <div class="breakFloat"></div>
                     </li>
                 </ul>
-                <ul>
+                <ul class="ulRight">
                     <li>
-                        <div class="controlDescription">pause game: p</div>                        
+                        <div class="controlDescription">pause game: <span class="commandValue">p</span></div>                        
                         <div class="breakFloat"></div>
                     </li>                                        
                     <li>
-                        <div class="controlDescription">new game: n</div>                        
+                        <div class="controlDescription">new game: <span class="commandValue">n</span></div>                        
                         <div class="breakFloat"></div>
                     </li>                                        
                     <li>
-                        <div class="controlDescription">star game: s</div>                        
+                        <div class="controlDescription">star game: <span class="commandValue">s</span></div>                        
+                        <div class="breakFloat"></div>
+                    </li>                                        
+                    <li>
+                        <div class="controlDescription">menu controllers: <span class="commandValue">o</span></div>
                         <div class="breakFloat"></div>
                     </li>                                        
                 </ul>
@@ -616,7 +620,7 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                 </div>
                 <div class="panelVerticalSeparator"></div>                
                 <div id="startNewGame" class="buttonPanelSection">Start Game</div>
-                <div id="gameControllers" class="buttonPanelSection">options Game</div>
+                <div id="gameControllers" class="buttonPanelSection">Game controllers</div>
             </div>
         </div>
 
@@ -629,6 +633,7 @@ $requestURICSS = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SE
                     gameControllers: '#gameControllers',
                     overlayPausedGame: '.overlayPausedGame',
                     newGameButton: '#newGame,#startNewGame',
+                    newGamePanelButton: '#newGame',
                     closeControllerMenu: '#closeControllerMenu',
                     cancelGameButton: '#cancelGame',
                     menuGamePaused: '#menuPausedGame',
