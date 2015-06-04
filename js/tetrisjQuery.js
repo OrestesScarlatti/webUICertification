@@ -5,8 +5,8 @@
 
         var DOMAINSHAPE = 4;
         var LINESTOLEVELUP = 4;
-        var INCREASESPEED = 10;
-
+        var INCREASESPEED = 100;
+        var FPS = 400;
         var el;
         var $el;
         var $gridNextShapeEl;
@@ -226,7 +226,7 @@
         };
         var score = 0;
         var lines = 0;
-        var level = 1;
+        var level = 0;
         var tablePunctuation = {1: 4, 2: 8, 3: 16, 4: 24};
 
         var defaults = {
@@ -264,7 +264,7 @@
             levelElement: '',
             kLinesFound: '',
             timeAnimationWindow: 400,
-            fps: 400
+            fps: FPS
         };
 
         var settings = null;
@@ -282,10 +282,7 @@
             generateNextShapeGrid();
 
             startEvents();
-                        
-//            $(settings.gridClass).filter(function () {
-//                return this.id.match(new RegExp('^grid[0-6]{1}1[7-9]{1}$', 'gi'));
-//            }).attr({'filled-shape': 3}).css({backgroundImage:settings.textures[0]});
+
         }
 
         var generateGrid = function () {
@@ -354,6 +351,7 @@
         }
 
         var moveDown = function (texture) {
+
             if (isValidMove(settings.r, settings.x, (settings.y + 1), shape)) {
                 ++settings.y;
                 clearBuffer(settings.r, settings.x, settings.y);
@@ -390,11 +388,14 @@
         }
 
         var rotateShape = function () {
-
-            if ((settings.r + 1) >= (DOMAINSHAPE)) {
-                settings.r = -1;
+            var rotation = settings.r;
+            if ((rotation + 1) >= (DOMAINSHAPE)) {
+                rotation = -1;
             }
-            if (isValidMove((settings.r + 1), settings.x, settings.y, shape)) {
+            if (isValidMove((rotation + 1), settings.x, settings.y, shape)) {
+                if ((settings.r + 1) >= (DOMAINSHAPE)) {
+                    settings.r = -1;
+                }
                 ++settings.r;
                 clearBuffer(settings.r, settings.x, settings.y);
             }
@@ -404,7 +405,6 @@
             var shapePosition = Math.floor(Math.random() * $.map(shapes, function () {
                 return this;
             }).length);
-//            var shapePosition = Math.floor(Math.random() * 1);
             var newShape = jQuery.extend(true, {}, shapes);
 
             return newShape[(shapePosition)];
@@ -457,7 +457,6 @@
                             return false;
                         }
                     } catch (e) {
-                        console.log(e.stack);
                         return false;
                     }
 
@@ -474,7 +473,7 @@
          * calculate next level
          */
         var completeLines = function () {
-
+            var currentLevel = 0;
             var $completeElements = null;
             var data = null;
             var $_thisRowFill = null;
@@ -512,10 +511,11 @@
                 lines = (kLinesFound += parseInt(settings.$lineElement.text()));
                 settings.$lineElement.text(lines);
             }
-
-            if (lines % 4 === 0 && kLinesFound > 0) {
-                level = (level ? level : 1) + parseInt(settings.$levelElement.text());
-                settings.$levelElement.text(level);
+            
+            if (lines % LINESTOLEVELUP === 0 && kLinesFound > 0) {
+                currentLevel = parseInt(settings.$levelElement.text()) + 1;                
+                settings.$levelElement.text(currentLevel);
+                level = currentLevel;
                 settings.fps -= (INCREASESPEED);
                 window.clearInterval(tetrisTimer);
                 tetrisTimer = null;
@@ -527,6 +527,7 @@
             delete $_thisRowFill;
             delete css;
             delete i;
+            delete currentLevel;
         }
 
         var showMenuGameOver = function (event) {
@@ -558,12 +559,16 @@
                 window.clearInterval(tetrisTimer);
                 tetrisTimer = null;
                 $(settings.gridClass).removeAttr('style').removeAttr(settings.attrFilledGrid);
+                settings.$lineElement.text(0);
+                settings.$scoreElement.text(0);
+                settings.$levelElement.text(0);
                 settings.r = 0;
                 settings.x = 2;
                 settings.y = 0;
                 settings.rLast = (settings.r || 0);
                 settings.xLast = (settings.xLast || settings.x);
                 settings.yLast = (settings.yLast || settings.y);
+                settings.fps = FPS;
                 getNewShape();
                 showNextShape();
                 draw(settings.r, settings.x, settings.y, shape.texture);
@@ -641,8 +646,7 @@
                         }
                         break;
                 }
-            }
-            );
+            });
             $(settings.newGameButton).click(function (event) {
                 var $this = $(this);
                 if (parseInt($this.attr('change-button'))) {
@@ -668,7 +672,6 @@
         return this.each(function () {
             ini(this, options);
             return settings;
-        }
-        );
+        });
     }
 })(jQuery);
