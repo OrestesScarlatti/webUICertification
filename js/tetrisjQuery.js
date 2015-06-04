@@ -531,7 +531,7 @@
         }
 
         var showMenuGameOver = function (event) {
-            isStartedGame = false;
+//            isStartedGame = false;
             $(settings.newGameButton).not(settings.newGamePanelButton).removeAttr('change-button', 1).text('Start Game');
             $(settings.menuGameOver).fadeIn(settings.timeAnimationWindow);
         }
@@ -602,7 +602,7 @@
 
         var startEvents = function () {
             $(window).keydown(function (event) {
-
+                console.log(event.charCode || event.keyCode);
                 switch (event.charCode || event.keyCode) {
                     case 37:
                         if (tetrisTimer) {
